@@ -15,35 +15,3 @@ to_png <- function(fig_path) {
 }
 
 knitr::opts_chunk$set(width = 69, message = FALSE, fig.align='center')
-
-knitr::opts_chunk$set(
-  python.reticulate = TRUE
-)
-reticulate::use_virtualenv(virtualenv = Sys.getenv("RETICULATE_PYTHON_ENV"), required = TRUE)
-
-# embed math fonts to pdf
-embed_math_fonts <- function(fig_path) {
-  if(knitr::is_latex_output()){
-    embedFonts(
-      file = fig_path, outfile = fig_path,
-      fontpaths = system.file("fonts", package = "fontcm")
-    )
-  }
-  return(fig_path)
-}
-
-knitr::knit_hooks$set(output = local({
-  # the default output hook
-  hook_output = knitr::knit_hooks$get('output')
-  function(x, options) {
-    if (!is.null(n <- options$out.lines)) { # out.lines
-      x = knitr:::split_lines(x)
-      if (length(x) > n) {
-        # truncate the output
-        x = c(head(x, n), '....\n')
-      }
-      x = paste(x, collapse = '\n') # paste first n lines together
-    }
-    hook_output(x, options)
-  }
-}))
