@@ -65,8 +65,9 @@ box()
 
 图 \@ref(fig:xkcd-fonts) 是一幅漫画风格的图形，展示了三种不同鸢尾花的萼片宽度和长度的关系，所用 iris 数据集也来自 Base R 自带的 **datasets** 包，由 Anderson Edgar 收集，最早见于 1935 年的文章，后被 Ronald Fisher 在研究分类问题时引用，到如今，在机器学习的社区里，提及 iris 数据集，很多人只知 Fisher 不知 Anderson。
 
-```{r xkcd-fonts, fig.cap="漫画风格的图形", out.width="75%", fig.width=5, fig.height=3, echo=FALSE}
+```{r xkcd-fonts, fig.cap="漫画风格的图形", out.width="75%", fig.width=5, fig.height=3, echo=FALSE, fig.showtext=TRUE}
 library(ggplot2)
+sysfonts::font_add("xkcd", regular = "~/Library/Fonts/xkcd.otf")
 ggplot(data = iris, aes(Sepal.Length, Sepal.Width)) +
   geom_point(aes(color = Species, shape = Species)) +
   theme_bw(base_size = 13, base_family = "xkcd") +
