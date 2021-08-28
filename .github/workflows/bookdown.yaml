@@ -25,7 +25,8 @@ jobs:
       fail-fast: false
       matrix:
         config:
-          - {os: macos-10.15, r: '4.1.1', python: '3.8'}
+          - {os: macos-10.15, r: '4.1.1', python: '3.8'} 
+          - {os: macos-11, r: '4.1.1', python: '3.8'}
 
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
@@ -40,25 +41,25 @@ jobs:
           r-version: ${{ matrix.config.r }}
           Ncpus: 2
 
-      - name: Cache conda
-        uses: actions/cache@v2
-        env:
-          # Increase this value to reset cache if environment.yml has not changed
-          CACHE_NUMBER: 0
-        with:
-          path: ~/conda_pkgs_dir
-          key: conda-${{ env.CACHE_NUMBER }}-${{ hashFiles('environment.yml') }}
-          
-      - uses: conda-incubator/setup-miniconda@v2
-        with:
-          auto-update-conda: true
-          python-version: ${{ matrix.config.python }}
-          miniconda-version: "latest"
-          activate-environment: 'r-reticulate'
-          channel-priority: flexible
-          show-channel-urls: true
-          environment-file: environment.yml
-          use-only-tar-bz2: true # IMPORTANT: This needs to be set for caching to work properly!
+      # - name: Cache conda
+      #   uses: actions/cache@v2
+      #   env:
+      #     # Increase this value to reset cache if environment.yml has not changed
+      #     CACHE_NUMBER: 0
+      #   with:
+      #     path: ~/conda_pkgs_dir
+      #     key: conda-${{ env.CACHE_NUMBER }}-${{ hashFiles('environment.yml') }}
+      #     
+      # - uses: conda-incubator/setup-miniconda@v2
+      #   with:
+      #     auto-update-conda: true
+      #     python-version: ${{ matrix.config.python }}
+      #     miniconda-version: "latest"
+      #     activate-environment: 'r-reticulate'
+      #     channel-priority: flexible
+      #     show-channel-urls: true
+      #     environment-file: environment.yml
+      #     use-only-tar-bz2: true # IMPORTANT: This needs to be set for caching to work properly!
 
       - name: Install Pandoc
         uses: r-lib/actions/setup-pandoc@v1
@@ -67,10 +68,11 @@ jobs:
 
       - name: Install ghostscript and Others
         run: |
-          brew install ghostscript imagemagick@6 poppler
+          brew install ghostscript imagemagick poppler
           brew install --cask xquartz
           brew tap homebrew/cask-fonts 
           brew install --cask font-xkcd
+          fc-list | sort
 
       - name: Cache R packages
         uses: actions/cache@v2
@@ -99,6 +101,7 @@ jobs:
           sessionInfo(package = .packages(T))
           webshot::is_phantomjs_installed()
           parallel::detectCores()
+          capabilities()
         shell: Rscript {0}
 
       - name: Install TinyTeX
